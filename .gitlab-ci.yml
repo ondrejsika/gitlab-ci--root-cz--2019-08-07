@@ -82,8 +82,11 @@ deploy prod:
     KUBECONFIG: .kubeconfig
     DEPLOY_NAME: $CI_PROJECT_PATH_SLUG
   script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - export PROD_IMAGE=$IMAGE-$(date "+%s")
+    - docker tag $IMAGE $PROD_IMAGE
     - echo $KUBECONFIG_FILECONTENT | base64 -d > $KUBECONFIG
-    - helm template ./helm/hello-world --name $DEPLOY_NAME --set image=$IMAGE --set host=$PROD_DOMAIN | kubectl apply -f -
+    - helm template ./helm/hello-world --name $DEPLOY_NAME --set image=$PROD_IMAGE --set host=$PROD_DOMAIN | kubectl apply -f -
   only:
     - master
   when: manual
