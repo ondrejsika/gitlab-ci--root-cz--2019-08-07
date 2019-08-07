@@ -75,3 +75,15 @@ stop dev:
   environment:
     name: $CI_COMMIT_REF_SLUG
     action: stop
+
+deploy prod:
+  stage: deploy prod
+  variables:
+    KUBECONFIG: .kubeconfig
+    DEPLOY_NAME: $CI_PROJECT_PATH_SLUG
+  script:
+    - echo $KUBECONFIG_FILECONTENT | base64 -d > $KUBECONFIG
+    - helm template ./helm/hello-world --name $DEPLOY_NAME --set image=$IMAGE --set host=$PROD_DOMAIN | kubectl apply -f -
+  only:
+    - master
+  when: manual
