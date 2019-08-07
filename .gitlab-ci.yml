@@ -20,6 +20,13 @@ lint:
     - yarn
     - yarn run prettier-check
 
+editorconfig check:
+  image: mstruebing/editorconfig-checker
+  stage: lint
+  script:
+    - /ec
+
+
 build:
   stage: build
   variables:
