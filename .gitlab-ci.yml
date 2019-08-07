@@ -15,5 +15,5 @@ lint:
   stage: lint
   script:
     - yarn
-    - yarn run prettir-check
+    - yarn run prettier-check
 
