@@ -1,0 +1,16 @@
+image: ondrejsika/ci
+
+stages:
+  - lint
+  - build
+  - test
+  - deploy dev
+  - deploy prod
+
+
+lint:
+  stage: lint
+  script:
+    - yarn
+    - yarn run prettir-check
+
