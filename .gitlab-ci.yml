@@ -87,3 +87,6 @@ deploy prod:
   only:
     - master
   when: manual
+  environment:
+    name: $CI_PROJECT_PATH_SLUG
+    url: https://$PROD_DOMAIN
