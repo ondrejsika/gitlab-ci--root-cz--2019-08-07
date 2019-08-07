@@ -13,41 +13,41 @@ variables:
   IMAGE: $CI_REGISTRY_IMAGE/app:$CI_COMMIT_REF_SLUG
   IMAGE_TESTS: $CI_REGISTRY_IMAGE/test:$CI_COMMIT_REF_SLUG
 
-# lint:
-#   image: node
-#   stage: lint
-#   script:
-#     - yarn
-#     - yarn run prettier-check
+lint:
+  image: node
+  stage: lint
+  script:
+    - yarn
+    - yarn run prettier-check
 
-# editorconfig check:
-#   image: mstruebing/editorconfig-checker
-#   stage: lint
-#   script:
-#     - /ec
-
-
-# build:
-#   stage: build
-#   variables:
-#     COMPOSE_FILE: compose/main.yaml:compose/tests.yaml
-#   script:
-#     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-#     - docker-compose build
-#     - docker-compose push
+editorconfig check:
+  image: mstruebing/editorconfig-checker
+  stage: lint
+  script:
+    - /ec
 
 
-# test:
-#   stage: test
-#   variables:
-#     COMPOSE_FILE: compose/main.yaml:compose/tests.yaml
-#     COMPOSE_PROJECT_NAME: $CI_JOB_ID
-#   script:
-#     - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
-#     - docker-compose pull
-#     - docker-compose run tests
-#   after_script:
-#     - docker-compose down
+build:
+  stage: build
+  variables:
+    COMPOSE_FILE: compose/main.yaml:compose/tests.yaml
+  script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker-compose build
+    - docker-compose push
+
+
+test:
+  stage: test
+  variables:
+    COMPOSE_FILE: compose/main.yaml:compose/tests.yaml
+    COMPOSE_PROJECT_NAME: $CI_JOB_ID
+  script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+    - docker-compose pull
+    - docker-compose run tests
+  after_script:
+    - docker-compose down
 
 .deploy: &deploy_template
   stage: deploy dev
